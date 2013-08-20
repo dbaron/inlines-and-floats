@@ -21,7 +21,7 @@ TODO: WRITE ME
 
 TODO: WRITE ME
 
-### Vertical align is tricky ###
+### 'vertical-align' is tricky ###
 
 TODO: WRITE ME
 
