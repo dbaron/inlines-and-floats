@@ -7,3 +7,26 @@ by [L. David Baron](http://dbaron.org)
 
 Prerequisite reading: [CSS 2.1](http://www.w3.org/TR/CSS21/), chapters 8, 9, and 10.
 
+This document starts with some observations about some pieces of the CSS box model that are tricky to implement, and then describes how they are currently implemented in Gecko and how I believe they could be implemented better.
+
+## Observations ##
+
+### The width available for a line wrapped around floats is a function of that line's height ###
+
+TODO: WRITE ME
+
+(what's spec'd, implementations being buggy, wikipedia being common testcase but now works around the bug)
+
+### The anchor point for a float need not be at a line breaking opportunity ###
+
+TODO: WRITE ME
+
+### Vertical align is tricky ###
+
+TODO: WRITE ME
+
+(aligned subtrees of line and of top/bottom elements within it)
+
+## Multi-pass line layout in Gecko ##
+
+## A possible single-pass line layout solution ##
