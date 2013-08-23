@@ -22,7 +22,7 @@ more sense to call it the float's anchor point.
 There's no requirement that this anchor point be at a line breaking
 opportunity.  It's perfectly legal markup to write:
 
-  <p>This is a ridicul<img style="float:left">ous example.</p>
+    <p>This is a ridicul<img style="float:left">ous example.</p>
 
 This is interesting because the 
 [float placement rules](http://www.w3.org/TR/CSS2/visuren.html#float-position)
