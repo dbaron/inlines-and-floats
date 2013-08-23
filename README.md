@@ -11,21 +11,42 @@ This document starts with some observations about some pieces of the CSS box mod
 
 ## Observations ##
 
-### The width available for a line wrapped around floats is a function of that line's height ###
+### The anchor point for a float need not be at a line breaking opportunity ###
 
 Conceptually, although it's not described in the spec, floats have a
 place that they come from:  essentially, where they would have been if
 they'd been a non-floated inline.  In Gecko, we actually place an empty
-inline there and call it the float's placeholder.  Because of the
+inline there and call it the float's placeholder.  It probably makes
+more sense to call it the float's anchor point.
+
+There's no requirement that this anchor point be at a line breaking
+opportunity.  It's perfectly legal markup to write:
+
+  <p>This is a ridicul<img style="float:left">ous example.</p>
+
+This is interesting because the 
 [float placement rules](http://www.w3.org/TR/CSS2/visuren.html#float-position)
 in CSS 2 (also see
-[why they're bad](http://dbaron.org/log/20120827-specification-style)),
-the float can't be above its placeholder, but it can be substantially
-below its placeholder.  This can happen, for example, if there are
+[why they're bad](http://dbaron.org/log/20120827-specification-style))
+generally want the float placed next to the line containing its anchor
+point.  But if that's not possible (because placing the float there
+would shorten the line enough that the anchor point no longer fits),
+then the *float* gets pushed down so that it doesn't intersect the line.
+
+So, logically, we can't be sure we've placed the float at a position
+until we've gotten to the first line breaking opportunity at or after
+its anchor point.  But more on that later, after my other observations.
+
+### The width available for a line wrapped around floats is a function of that line's height ###
+
+Because of the [float placement
+rules](http://www.w3.org/TR/CSS2/visuren.html#float-position) in CSS 2,
+the float can't be above its anchor point, but it can be substantially
+below its anchor point.  This can happen, for example, if there are
 multiple floats that are too big to all fit next to each other, or if
 some of the floats use the 'clear' property, which clears them past
 other floats.  This sort of situation, with the top of a float being
-substantially below its placeholder, is relatively common on Wikipedia.
+substantially below its anchor point, is relatively common on Wikipedia.
 
 When this happens, the lines that come logically after the float have to
 wrap around the float.  A later float might be wider than a float before
@@ -52,10 +73,6 @@ contexts that wrap around floats; Gecko doesn't get that case right.)
 This, in turn, means that placing something new on a line (for example,
 an inline image) that fits horizontally might not fit because it makes
 the line taller which in turn reduces the available width for the line.
-
-### The anchor point for a float need not be at a line breaking opportunity ###
-
-TODO: WRITE ME
 
 ### 'vertical-align' is tricky ###
 
