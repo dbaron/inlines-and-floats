@@ -76,10 +76,31 @@ the line taller which in turn reduces the available width for the line.
 
 ### 'vertical-align' is tricky ###
 
-TODO: WRITE ME
+The values of the [vertical-align
+property](http://www.w3.org/TR/CSS21/visudet.html#propdef-vertical-align)
+fall into two groups.  One group is the 'top' and 'bottom' values.  The
+other group is all the rest of the values.
 
-(aligned subtrees of line and of top/bottom elements within it)
+For all values other than top or bottom, vertical-align describes how an
+element is aligned relative to its parent.
+
+The 'top' and 'bottom' values, on the other hand, describe the position
+of that element relative to the line.  Or, really, they describe the
+position of of that element and its descendants that are aligned to it
+relative to the line, since the element with 'top' or 'bottom' can have
+a descendant that extends above or below the element's top and bottom.
+
+In essence, this means vertical alignment operates in terms of subtrees
+that are glued together instantly, one for the root of the line (the
+block containing it) and one for each element with 'top' or 'bottom'
+vertical-alignment.  These subtrees, while fixed immediately within the
+subtree, have unknown position relative to each other (I've called them
+"loose") until all content is placed on the line.
 
 ## Multi-pass line layout in Gecko ##
+
+TODO: 3 reasons for multi-pass layout
+
+TODO: vertical alignment being at end of laying out the line
 
 ## A possible single-pass line layout solution ##
