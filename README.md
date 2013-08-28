@@ -149,7 +149,19 @@ workaround for it not being quite right.)
 
 ## Vertical alignment in Gecko ##
 
-TODO: vertical alignment being at end of laying out the line
+Part of the need for these multi-pass cases in line layout is related to
+the way we do vertical alignment in Gecko:  at the end of the line
+layout process.  We do horizontal layout first, and then when we're done
+(but still inside the above repetition loops), do vertical alignment for
+the entire line in nsLineLayout::VerticalAlignLine.  This function does
+two passes over the line, one (VerticalAlignFrames) to handle all of the
+parent-relative 'vertical-align' values (anything other than 'top' and
+'bottom') and gather the information needed for the line-relative
+'vertical-align' values ('top' and 'bottom') and then another pass
+(PlaceTopBottomFrames) to finish the alignment of the line-relative
+values.  This means that line height calculations are not done at all
+until line layout is complete, which is one thing that would need to be
+changed to avoid multi-pass layout in the cases above.
 
 ## A possible single-pass line layout solution ##
 
