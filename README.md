@@ -165,6 +165,30 @@ changed to avoid multi-pass layout in the cases above.
 
 ## A possible single-pass line layout solution ##
 
-TODO: describe
+So I *think* (though I haven't worked it through in too much detail)
+that it should be possible to do line layout in a way that is always
+single pass.  It requires addressing the issues above with some care; in
+particular:
+
+1. Inline layout needs to have a notion of committing each unbreakable
+unit to the line, even if that unbreakable unit contains multiple
+elements.
+
+2. Float layout and placement should happen *after* the unbreakable unit
+containing the float's anchor point has been committed to the line.  (An
+anchor point in between unbreakable units, however, should not, I think,
+ever attach to the following unbreakable unit, though.)
+
+3. Vertical alignment and line height calculation needs to be done
+incrementally as unbreakable units are committed to the line.  This
+means (a) computing all parent-relative alignment immediately (b)
+propagating the effects on line-height up to the closest ancestor with
+line-relative alignment or to the line and (c) keeping track of the
+largest contribution to line box height from a line-relative piece (the
+line itself, or an element with line-relative alignment).  Really, this
+needs to be compute prior to commiting the word to the line, and then
+committed afterwards, along with committing the word.
+
+4. TODO: more description
 
 TODO: consider breaks with different priorities
