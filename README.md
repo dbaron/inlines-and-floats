@@ -99,8 +99,60 @@ subtree, have unknown position relative to each other (I've called them
 
 ## Multi-pass line layout in Gecko ##
 
-TODO: 3 reasons for multi-pass layout
+In Gecko, related to the above reasons, there are three reasons that we
+repeat layout of a line.  The repetition is implemented in the loops in
+nsBlockFrame::ReflowInlineFrames.  These three reasons are:
+
+LINE_REFLOW_REDO_NO_PULL:  We redo the line's reflow when we've placed
+content on the line past the last break that fits.  This happens
+because, in Gecko, we place one frame (box, rendering object) on the
+line at a time.  There are frequently not break opportunities between
+frames.  For example, the following markup has multiple frames but no
+breaking opportunities:
+    <div>Inte<a>rest</a>ingly</div>
+
+This case is essentially a workaround for the way Gecko does inline
+layout.
+
+LINE_REFLOW_REDO_MORE_FLOATS:  This is the case that reflects one of the
+observations above, that the width available for a line can decrease if
+the line takes up more height.  In Gecko, when that happens, we start
+layout of the line over again, decreasing its width to the width
+available with the new height.  (The first time through assumes the line
+will have zero height, which is actually probably too conservative.)
+
+This case could be avoided if we avoided placing unbreakable units on
+the line if they would increase the line's height in a way that would
+decrease the line's width such that that unit wouldn't fit.  (This
+requires, when placing each unit, doing enough of the vertical alignment
+process to determine its effect on the line's height.  See below.)
+
+LINE_REFLOW_REDO_NEXT_BAND:  This happens when the *first* unbreakable
+unit ("word") on the line doesn't fit next to floats.  In this case we
+have to move the entire line down, until either the word fits or there
+are no longer floats next to it.  It might appear that this doesn't
+require redoing the layout of the line.  However, I believe that it does
+because of floats whose anchor points might be in the middle of that
+first word.  We normally position and lay out (reflow) floats when we
+reach their anchor point during inline layout.  If we only pushed the
+line down without layout out that first word again, we would fail to lay
+out the floats again.
+
+This could be avoided by not placing and laying out the floats until
+we've committed the word that contains their anchor point to a line.
+This appears to me to be the correct time, in the sense that we want to
+do this after things that can influence their position, but before
+things whose position they influence.  (That's generally how we want to
+order our layout calculations.  While the current order for floats is
+close to correctly ordered, the LINE_REFLOW_REDO_NEXT_BAND is a
+workaround for it not being quite right.)
+
+## Vertical alignment in Gecko ##
 
 TODO: vertical alignment being at end of laying out the line
 
 ## A possible single-pass line layout solution ##
+
+TODO: describe
+
+TODO: consider breaks with different priorities
