@@ -97,6 +97,29 @@ vertical-alignment.  These subtrees, while fixed immediately within the
 subtree, have unknown position relative to each other (I've called them
 "loose") until all content is placed on the line.
 
+### Floats usually, but not always, have sizes that don't depend on their position ###
+
+According to the CSS specifications, the size of a float doesn't depend
+at all on its position; the size is simply computed from the CSS
+properties on the float, its contents, and the size of its containing
+block.
+
+However, floating tables, in quirks mode, show a different behavior.
+(It's worth investigating if this behavior is still needed for
+backwards-compatibility, since it introduces a good bit of complexity.)
+Floating tables in quirks mode use the width available for lines to fit
+in (which considers floats adjacent to the line or table) in their
+sizing rules, in place of the width of the containing block.  (In
+general, sizing this way produces very bad effects when multiple floats
+are used and shrink wrapped, as described in TODO: LINK HERE.)
+
+In Gecko, this quirk is implemented in
+nsBlockReflowState::FlowAndPlaceFloat and
+nsBlockFrame::AdjustFloatAvailableSpace.
+
+This single case adds extra complexity to the problem of float layout
+(unless it turns out it's possible to remove it from the Web).
+
 ## Multi-pass line layout in Gecko ##
 
 In Gecko, related to the above reasons, there are three reasons that we
@@ -190,5 +213,7 @@ needs to be compute prior to commiting the word to the line, and then
 committed afterwards, along with committing the word.
 
 4. TODO: more description
+
+TODO: consider quirks mode floating tables
 
 TODO: consider breaks with different priorities
