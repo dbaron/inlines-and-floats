@@ -132,6 +132,7 @@ because, in Gecko, we place one frame (box, rendering object) on the
 line at a time.  There are frequently not break opportunities between
 frames.  For example, the following markup has multiple frames but no
 breaking opportunities:
+
     <div>Inte<a>rest</a>ingly</div>
 
 This case is essentially a workaround for the way Gecko does inline
