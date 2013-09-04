@@ -111,7 +111,8 @@ Floating tables in quirks mode use the width available for lines to fit
 in (which considers floats adjacent to the line or table) in their
 sizing rules, in place of the width of the containing block.  (In
 general, sizing this way produces very bad effects when multiple floats
-are used and shrink wrapped, as described in TODO: LINK HERE.)
+are used and shrink wrapped, as described in TODO: LINK HERE (and also
+see [the bug where this problem was fixed in Gecko](https://bugzilla.mozilla.org/show_bug.cgi?id=59200)).)
 
 In Gecko, this quirk is implemented in
 nsBlockReflowState::FlowAndPlaceFloat and
