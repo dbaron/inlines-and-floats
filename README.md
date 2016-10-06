@@ -127,7 +127,7 @@ In Gecko, related to the above reasons, there are three reasons that we
 repeat layout of a line.  The repetition is implemented in the loops in
 nsBlockFrame::ReflowInlineFrames.  These three reasons are:
 
-LINE_REFLOW_REDO_NO_PULL:  We redo the line's reflow when we've placed
+LineReflowStatus::RedoNoPull:  We redo the line's reflow when we've placed
 content on the line past the last break that fits.  This happens
 because, in Gecko, we place one frame (box, rendering object) on the
 line at a time.  There are frequently not break opportunities between
@@ -139,7 +139,7 @@ breaking opportunities:
 This case is essentially a workaround for the way Gecko does inline
 layout.
 
-LINE_REFLOW_REDO_MORE_FLOATS:  This is the case that reflects one of the
+LineReflowStatus::RedoMoreFloats:  This is the case that reflects one of the
 observations above, that the width available for a line can decrease if
 the line takes up more height.  In Gecko, when that happens, we start
 layout of the line over again, decreasing its width to the width
@@ -152,7 +152,7 @@ decrease the line's width such that that unit wouldn't fit.  (This
 requires, when placing each unit, doing enough of the vertical alignment
 process to determine its effect on the line's height.  See below.)
 
-LINE_REFLOW_REDO_NEXT_BAND:  This happens when the *first* unbreakable
+LineReflowStatus::RedoNextBand:  This happens when the *first* unbreakable
 unit ("word") on the line doesn't fit next to floats.  In this case we
 have to move the entire line down, until either the word fits or there
 are no longer floats next to it.  It might appear that this doesn't
@@ -169,7 +169,7 @@ This appears to me to be the correct time, in the sense that we want to
 do this after things that can influence their position, but before
 things whose position they influence.  (That's generally how we want to
 order our layout calculations.  While the current order for floats is
-close to correctly ordered, the LINE_REFLOW_REDO_NEXT_BAND is a
+close to correctly ordered, the LineReflowStatus::RedoNextBand is a
 workaround for it not being quite right.)
 
 ## Vertical alignment in Gecko ##
